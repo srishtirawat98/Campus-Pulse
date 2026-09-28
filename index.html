@@ -11,7 +11,7 @@
 <style>
 /* ─────────────────────────────────────────────────────────────
    CAMPUS PULSE DESIGN SYSTEM TOKENS
-   Visual Identity inspired by bold editorial minimalism
+   Visual Identity: Bold editorial minimalism with smooth motion
 ───────────────────────────────────────────────────────────── */
 :root {
   --forest: #12351F;
@@ -73,15 +73,64 @@ body.focus-mode .fragment-strip {
   filter: blur(1px);
 }
 
-body.focus-mode .hero-card-preview {
-  box-shadow: 0 0 0 3px var(--lime);
-  transform: translateY(-8px) scale(1.02);
-}
-
 /* Focus outline */
 :focus-visible {
   outline: 2px solid var(--lime);
   outline-offset: 3px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PAGE SLIDING ANIMATION & SCROLL REVEALS
+───────────────────────────────────────────────────────────── */
+.slide-section {
+  opacity: 0;
+  transform: translateY(54px);
+  transition: opacity 0.85s var(--ease-spring), transform 0.85s var(--ease-spring);
+  will-change: opacity, transform;
+}
+
+.slide-section.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Masked Headline Reveal */
+.mask-line-wrap {
+  overflow: hidden;
+  display: block;
+  padding-bottom: 2px;
+}
+
+.mask-line-wrap > span {
+  display: block;
+  transform: translateY(115%);
+  animation: slideUpMask 0.9s var(--ease-spring) forwards;
+}
+
+.mask-line-wrap:nth-child(1) > span { animation-delay: 0.08s; }
+.mask-line-wrap:nth-child(2) > span { animation-delay: 0.18s; }
+.mask-line-wrap:nth-child(3) > span { animation-delay: 0.28s; }
+
+@keyframes slideUpMask {
+  0% { transform: translateY(115%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Staggered Signal Fragment Slide-In */
+.fragment-strip {
+  opacity: 0;
+  transform: translateX(-36px);
+  animation: slideInFragment 0.7s var(--ease-spring) forwards;
+}
+
+.fragment-strip:nth-child(1) { animation-delay: 0.4s; }
+.fragment-strip:nth-child(2) { animation-delay: 0.52s; }
+.fragment-strip:nth-child(3) { animation-delay: 0.64s; }
+.fragment-strip:nth-child(4) { animation-delay: 0.76s; }
+
+@keyframes slideInFragment {
+  0% { opacity: 0; transform: translateX(-36px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 
 /* Typography Presets */
@@ -131,11 +180,11 @@ body.focus-mode .hero-card-preview {
   text-decoration: none;
   cursor: pointer;
   border: none;
-  transition: transform 0.2s var(--ease-spring), background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s var(--ease-spring), background-color 0.2s ease, color 0.2s ease, box-shadow 0.25s ease;
 }
 
 .btn-pill:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .btn-pill:active {
@@ -149,7 +198,7 @@ body.focus-mode .hero-card-preview {
 
 .btn-lime:hover {
   background-color: #caff70;
-  box-shadow: 0 8px 24px rgba(184, 243, 90, 0.35);
+  box-shadow: 0 10px 28px rgba(184, 243, 90, 0.4);
 }
 
 .btn-forest {
@@ -159,6 +208,7 @@ body.focus-mode .hero-card-preview {
 
 .btn-forest:hover {
   background-color: #1b4d2d;
+  box-shadow: 0 8px 24px rgba(18, 53, 31, 0.3);
 }
 
 .btn-outline-dark {
@@ -195,14 +245,15 @@ body.focus-mode .hero-card-preview {
   cursor: pointer;
   background: none;
   border: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .link-text:hover {
-  opacity: 0.7;
+  opacity: 0.75;
+  transform: translateX(2px);
 }
 
-/* Layout Utilities */
+/* Layout Container */
 .container {
   max-width: 1240px;
   margin: 0 auto;
@@ -217,7 +268,7 @@ body.focus-mode .hero-card-preview {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   STICKY HEADER (SMART LIGHT/DARK INVERSION)
+   STICKY HEADER (SMART LIGHT/DARK DETECTION + SLIDING PILL)
 ───────────────────────────────────────────────────────────── */
 .site-header {
   position: fixed;
@@ -226,15 +277,15 @@ body.focus-mode .hero-card-preview {
   width: 100%;
   height: var(--header-height);
   z-index: 1000;
-  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.35s ease, border-color 0.35s ease, transform 0.3s ease;
   background-color: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .site-header.theme-dark {
-  background-color: rgba(18, 53, 31, 0.94);
+  background-color: rgba(18, 53, 31, 0.95);
   border-bottom: 1px solid rgba(184, 243, 90, 0.15);
 }
 
@@ -245,7 +296,7 @@ body.focus-mode .hero-card-preview {
   height: 100%;
 }
 
-/* Brand Logo */
+/* Brand */
 .brand {
   display: flex;
   align-items: center;
@@ -301,18 +352,31 @@ body.focus-mode .hero-card-preview {
   text-transform: uppercase;
 }
 
-/* Nav Pills */
+/* Sliding Pill Navigation */
 .nav-pill-group {
   display: flex;
   align-items: center;
   background-color: var(--mist);
   padding: 4px;
   border-radius: 9999px;
+  position: relative;
   transition: background-color 0.3s ease;
 }
 
 .site-header.theme-dark .nav-pill-group {
   background-color: rgba(0, 0, 0, 0.35);
+}
+
+.nav-pill-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: calc(100% - 8px);
+  background-color: var(--lime);
+  border-radius: 9999px;
+  transition: transform 0.35s var(--ease-spring), width 0.35s var(--ease-spring);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .nav-link {
@@ -324,8 +388,9 @@ body.focus-mode .hero-card-preview {
   letter-spacing: 0.04em;
   text-decoration: none;
   color: var(--charcoal);
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   position: relative;
+  z-index: 2;
 }
 
 .site-header.theme-dark .nav-link {
@@ -341,12 +406,10 @@ body.focus-mode .hero-card-preview {
 }
 
 .nav-link.active {
-  background-color: var(--lime);
   color: var(--forest);
 }
 
 .site-header.theme-dark .nav-link.active {
-  background-color: var(--lime);
   color: var(--forest);
 }
 
@@ -365,11 +428,13 @@ body.focus-mode .hero-card-preview {
   border-radius: 9999px;
   letter-spacing: 0.02em;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .header-btn-subtle {
   color: var(--charcoal);
   background: transparent;
+  border: none;
 }
 
 .site-header.theme-dark .header-btn-subtle {
@@ -389,6 +454,7 @@ body.focus-mode .hero-card-preview {
 .header-btn-primary {
   background-color: var(--forest);
   color: var(--lime);
+  border: none;
 }
 
 .site-header.theme-dark .header-btn-primary {
@@ -396,18 +462,15 @@ body.focus-mode .hero-card-preview {
   color: var(--forest);
 }
 
-/* Mobile Nav Bar */
 @media (max-width: 768px) {
-  .nav-pill-group {
-    display: none;
-  }
+  .nav-pill-group,
   .header-actions .header-btn-subtle {
     display: none;
   }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   HERO SECTION: EDITORIAL CANVAS + FRAGMENTS + TIMER
+   SECTION 1: HERO (EDITORIAL CANVAS + 60S INTERACTIVE OBJECT)
 ───────────────────────────────────────────────────────────── */
 .hero-section {
   padding-top: calc(var(--header-height) + 54px);
@@ -442,11 +505,6 @@ body.focus-mode .hero-card-preview {
 .hero-headline {
   margin-bottom: 24px;
   color: var(--obsidian);
-  transition: color 0.3s ease;
-}
-
-.hero-headline span {
-  display: block;
 }
 
 .hero-sub {
@@ -474,9 +532,8 @@ body.focus-mode .hero-card-preview {
   margin-bottom: 56px;
 }
 
-/* Abstract Campus Signal Fragments System */
+/* Signal Fragments */
 .signal-fragments-canvas {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -500,7 +557,7 @@ body.focus-mode .hero-card-preview {
 }
 
 .fragment-strip:hover {
-  transform: translateX(6px);
+  transform: translateX(8px);
   background-color: var(--mint);
   border-color: rgba(18, 53, 31, 0.15);
 }
@@ -531,9 +588,7 @@ body.focus-mode .hero-card-preview {
   font-weight: 700;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   HERO OVERLAPPING 60-SECOND INTERACTIVE TIMER OBJECT
-───────────────────────────────────────────────────────────── */
+/* 60-Second Interactive Object */
 .timer-interactive-card {
   background-color: var(--forest);
   color: var(--paper);
@@ -543,6 +598,12 @@ body.focus-mode .hero-card-preview {
   overflow: hidden;
   box-shadow: 0 24px 64px rgba(18, 53, 31, 0.22);
   border: 1px solid rgba(184, 243, 90, 0.2);
+  transition: transform 0.35s var(--ease-spring), box-shadow 0.35s ease;
+}
+
+.timer-interactive-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 72px rgba(18, 53, 31, 0.28);
 }
 
 .timer-card-header {
@@ -610,7 +671,7 @@ body.focus-mode .hero-card-preview {
   stroke: var(--lime);
   stroke-width: 8;
   stroke-linecap: round;
-  stroke-dasharray: 565.48; /* 2 * PI * 90 */
+  stroke-dasharray: 565.48;
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.8s linear, stroke 0.3s ease;
 }
@@ -667,16 +728,17 @@ body.focus-mode .hero-card-preview {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .timer-btn-reset:hover {
   background: rgba(255, 255, 255, 0.2);
+  transform: rotate(-45deg);
 }
 
 /* ─────────────────────────────────────────────────────────────
    SECTION 2: THE PROBLEM (CAMPUS MINT #E8F6D8)
-   Horizontal Animated Sequence: Notice -> PDF -> WhatsApp -> LMS -> Student
+   Horizontal Animated Sequence + Collapse Transition
 ───────────────────────────────────────────────────────────── */
 .section-problem {
   background-color: var(--mint);
@@ -709,6 +771,7 @@ body.focus-mode .hero-card-preview {
   box-shadow: 0 8px 32px rgba(18, 53, 31, 0.06);
   border: 1px solid rgba(18, 53, 31, 0.08);
   margin-bottom: 40px;
+  overflow: hidden;
 }
 
 .sequence-flow {
@@ -719,6 +782,7 @@ body.focus-mode .hero-card-preview {
   position: relative;
   overflow-x: auto;
   padding: 12px 4px;
+  transition: all 0.5s var(--ease-spring);
 }
 
 .sequence-flow::-webkit-scrollbar {
@@ -787,7 +851,7 @@ body.focus-mode .hero-card-preview {
   flex-shrink: 0;
 }
 
-/* Collapse Interactive Action */
+/* Collapse Interactive Card */
 .collapse-interactive-card {
   background-color: var(--forest);
   color: var(--paper);
@@ -820,8 +884,7 @@ body.focus-mode .hero-card-preview {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SECTION 3: ARCHITECTURE (DARK CAMPUS FOREST #12351F)
-   Context Engine Pipeline Flow: Sources -> Context Engine -> Surfaces -> One-Tap
+   SECTION 3: ARCHITECTURE (DARK FOREST #12351F)
 ───────────────────────────────────────────────────────────── */
 .section-arch {
   background-color: var(--forest);
@@ -847,7 +910,6 @@ body.focus-mode .hero-card-preview {
   max-width: 680px;
 }
 
-/* Interactive Pipeline System */
 .arch-pipeline-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -870,11 +932,11 @@ body.focus-mode .hero-card-preview {
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.3s var(--ease-spring), border-color 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.35s var(--ease-spring), border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .arch-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
   border-color: var(--lime);
   background-color: rgba(255, 255, 255, 0.08);
 }
@@ -935,7 +997,6 @@ body.focus-mode .hero-card-preview {
   color: var(--lime);
 }
 
-/* Architecture Callout Strip */
 .arch-callout-strip {
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(184, 243, 90, 0.2);
@@ -959,8 +1020,7 @@ body.focus-mode .hero-card-preview {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SECTION 4: NOW (WHITE SECTION)
-   What Matters Now Editorial Action Card + Calm Urgency + Room Wayfinder
+   SECTION 4: NOW (WHAT MATTERS NOW? + WAYFINDER)
 ───────────────────────────────────────────────────────────── */
 .section-now {
   background-color: var(--paper);
@@ -996,7 +1056,6 @@ body.focus-mode .hero-card-preview {
   }
 }
 
-/* The Hero Editorial Action Card */
 .editorial-action-card {
   background-color: var(--forest);
   color: var(--paper);
@@ -1008,11 +1067,11 @@ body.focus-mode .hero-card-preview {
   justify-content: space-between;
   border: 1px solid rgba(18, 53, 31, 0.1);
   box-shadow: 0 16px 48px rgba(18, 53, 31, 0.12);
-  transition: transform 0.3s var(--ease-spring);
+  transition: transform 0.35s var(--ease-spring);
 }
 
 .editorial-action-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
 }
 
 .action-card-top {
@@ -1091,7 +1150,7 @@ body.focus-mode .hero-card-preview {
   flex-wrap: wrap;
 }
 
-/* Secondary Side Card / Wayfinding Preview */
+/* Wayfinder Preview Card */
 .wayfinder-preview-card {
   background-color: var(--mist);
   border-radius: 28px;
@@ -1154,7 +1213,7 @@ body.focus-mode .hero-card-preview {
   margin-left: 4px;
 }
 
-/* Modal Drawer for Room Change */
+/* Wayfinder Modal Drawer (Smooth Sliding Up) */
 .wayfinder-modal {
   display: none;
   position: fixed;
@@ -1162,7 +1221,7 @@ body.focus-mode .hero-card-preview {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(11, 14, 12, 0.6);
+  background: rgba(11, 14, 12, 0.65);
   backdrop-filter: blur(8px);
   z-index: 2000;
   align-items: center;
@@ -1181,12 +1240,12 @@ body.focus-mode .hero-card-preview {
   width: 100%;
   padding: 40px;
   position: relative;
-  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.3);
-  animation: modalEnter 0.3s var(--ease-spring);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.35);
+  animation: slideUpModal 0.4s var(--ease-spring);
 }
 
-@keyframes modalEnter {
-  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+@keyframes slideUpModal {
+  from { opacity: 0; transform: translateY(60px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -1204,11 +1263,16 @@ body.focus-mode .hero-card-preview {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  transform: rotate(90deg);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SECTION 5: FIND (PALE MINT #E8F6D8)
-   Ask Once + Search Bar + Intent Chips + Dynamic Result Flow + Context Explanation
+   SECTION 5: FIND (ASK ONCE + DYNAMIC RESULT SLIDING)
 ───────────────────────────────────────────────────────────── */
 .section-find {
   background-color: var(--mint);
@@ -1232,7 +1296,6 @@ body.focus-mode .hero-card-preview {
   opacity: 0.85;
 }
 
-/* Search Box Container */
 .search-system-wrap {
   max-width: 860px;
   margin-bottom: 40px;
@@ -1292,7 +1355,6 @@ body.focus-mode .hero-card-preview {
   justify-content: center;
 }
 
-/* Intent Chips */
 .intent-chips-row {
   display: flex;
   align-items: center;
@@ -1325,7 +1387,7 @@ body.focus-mode .hero-card-preview {
   border-color: var(--forest);
 }
 
-/* Dynamic Results Flow (Clean flowing list, NOT card grid) */
+/* Dynamic Results List with Sliding Animation */
 .results-flow-container {
   background: var(--paper);
   border-radius: 28px;
@@ -1334,6 +1396,16 @@ body.focus-mode .hero-card-preview {
   border: 1px solid rgba(18, 53, 31, 0.08);
   max-width: 860px;
   margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.results-flow-container.slide-transition {
+  animation: slideInResults 0.35s var(--ease-spring);
+}
+
+@keyframes slideInResults {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .result-row {
@@ -1462,8 +1534,8 @@ body.focus-mode .hero-card-preview {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SECTION 6: TASKS (DARK FOREST #12351F / OBSIDIAN #0B0E0C)
-   Finish The Next Thing + Interactive Completion States + Lime Burst
+   SECTION 6: TASKS (DARK FOREST #12351F / OBSIDIAN)
+   Slide-Out Task Completion Animation
 ───────────────────────────────────────────────────────────── */
 .section-tasks {
   background-color: var(--obsidian);
@@ -1508,7 +1580,7 @@ body.focus-mode .hero-card-preview {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  transition: transform 0.4s var(--ease-spring), opacity 0.4s ease, border-color 0.3s ease;
+  transition: transform 0.45s var(--ease-spring), opacity 0.4s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -1527,8 +1599,8 @@ body.focus-mode .hero-card-preview {
 }
 
 .task-card-item.completed {
-  opacity: 0.25;
-  transform: scale(0.97);
+  transform: translateX(120px) scale(0.95);
+  opacity: 0.15;
   pointer-events: none;
 }
 
@@ -1570,11 +1642,6 @@ body.focus-mode .hero-card-preview {
   flex-shrink: 0;
 }
 
-.task-btn-complete {
-  position: relative;
-}
-
-/* Success Celebration Toast for Tasks */
 .task-celebration-toast {
   display: none;
   background-color: var(--forest);
@@ -1588,11 +1655,11 @@ body.focus-mode .hero-card-preview {
   max-width: 480px;
   margin: 0 auto;
   box-shadow: 0 8px 32px rgba(184, 243, 90, 0.25);
-  animation: slideUpToast 0.3s var(--ease-spring);
+  animation: slideUpToast 0.35s var(--ease-spring);
 }
 
 @keyframes slideUpToast {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -1603,8 +1670,7 @@ body.focus-mode .hero-card-preview {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SECTION 7: THE 60-SECOND JOURNEY (MIST #EDF0EA)
-   From Confusion to Action: 01 See -> 02 Understand -> 03 Act -> 04 Done
+   SECTION 7: THE 60-SECOND JOURNEY
 ───────────────────────────────────────────────────────────── */
 .section-journey {
   background-color: var(--paper);
@@ -1654,7 +1720,7 @@ body.focus-mode .hero-card-preview {
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s var(--ease-spring), background-color 0.3s ease;
+  transition: transform 0.35s var(--ease-spring), background-color 0.3s ease;
   min-height: 280px;
 }
 
@@ -1688,7 +1754,7 @@ body.focus-mode .hero-card-preview {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SECTION 8: DESIGN PRINCIPLES (SPACIOUS 3-COLUMN)
+   SECTION 8: DESIGN PRINCIPLES
 ───────────────────────────────────────────────────────────── */
 .section-principles {
   background-color: var(--mist);
@@ -1723,11 +1789,11 @@ body.focus-mode .hero-card-preview {
   padding: 48px 36px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-  transition: transform 0.3s var(--ease-spring);
+  transition: transform 0.35s var(--ease-spring);
 }
 
 .principle-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
 }
 
 .principle-num {
@@ -1798,9 +1864,7 @@ body.focus-mode .hero-card-preview {
   color: var(--lime);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   BOTTOM MOBILE NAVIGATION BAR
-───────────────────────────────────────────────────────────── */
+/* Mobile Compact Bottom Nav Bar */
 .mobile-bottom-bar {
   display: none;
   position: fixed;
@@ -1844,11 +1908,10 @@ body.focus-mode .hero-card-preview {
 <body>
 
 <!-- ══════════════════════════════════════════════════════════════
-     STICKY HEADER WITH SMART LIGHT / DARK DETECTION
+     STICKY HEADER WITH SMART LIGHT / DARK DETECTION + SLIDING PILL
 ══════════════════════════════════════════════════════════════ -->
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
-    <!-- Brand -->
     <a href="#hero" class="brand" aria-label="Campus Pulse Home">
       <div class="brand-pulse-icon">
         <span class="pulse-dot"></span>
@@ -1857,14 +1920,14 @@ body.focus-mode .hero-card-preview {
       <span class="brand-text">Campus Pulse</span>
     </a>
 
-    <!-- Pill Navigation -->
-    <nav class="nav-pill-group" aria-label="Main Navigation">
+    <!-- Pill Navigation with Animated Sliding Indicator -->
+    <nav class="nav-pill-group" id="navPillGroup" aria-label="Main Navigation">
+      <span class="nav-pill-indicator" id="navPillIndicator"></span>
       <a href="#now" class="nav-link active" data-nav="now">Now</a>
       <a href="#find" class="nav-link" data-nav="find">Find</a>
       <a href="#tasks" class="nav-link" data-nav="tasks">Tasks</a>
     </nav>
 
-    <!-- Header Actions -->
     <div class="header-actions">
       <a href="#arch" class="header-btn header-btn-subtle">Architecture</a>
       <button class="header-btn header-btn-primary" id="header60Btn">60s Mode</button>
@@ -1873,21 +1936,20 @@ body.focus-mode .hero-card-preview {
 </header>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 1: HERO SECTION + FRAGMENTS + 60S INTERACTIVE TIMER
+     SECTION 1: HERO (MASKED HEADLINE SLIDE-UP + FRAGMENTS + TIMER)
 ══════════════════════════════════════════════════════════════ -->
 <section class="hero-section" id="hero" data-theme="light">
   <div class="container">
     <div class="hero-grid">
-      <!-- Left Editorial Story -->
       <div class="hero-story">
         <div class="pill-badge hero-eyebrow">
           <span>DESIGNOVA 2026 · TRACK T-01 · PS-01</span>
         </div>
 
         <h1 class="display-title display-hero hero-headline">
-          <span>WHAT</span>
-          <span>MATTERS</span>
-          <span>NOW?</span>
+          <span class="mask-line-wrap"><span>WHAT</span></span>
+          <span class="mask-line-wrap"><span>MATTERS</span></span>
+          <span class="mask-line-wrap"><span>NOW?</span></span>
         </h1>
 
         <p class="hero-sub">You have 60 seconds. Find what you need.</p>
@@ -1904,7 +1966,6 @@ body.focus-mode .hero-card-preview {
           </a>
         </div>
 
-        <!-- Abstract Campus Signal Fragments System -->
         <div class="signal-fragments-canvas" aria-label="Abstract campus signal stream">
           <div class="fragment-strip">
             <span class="fragment-tag urgent">URGENT</span>
@@ -1933,7 +1994,6 @@ body.focus-mode .hero-card-preview {
         </div>
       </div>
 
-      <!-- Right Overlapping 60-Second Interactive Object -->
       <div class="hero-interactive-col">
         <div class="timer-interactive-card" id="timerCard">
           <div class="timer-card-header">
@@ -1945,7 +2005,6 @@ body.focus-mode .hero-card-preview {
           </div>
 
           <div class="timer-display-area">
-            <!-- Animated SVG Circle -->
             <svg class="timer-svg-circle" viewBox="0 0 200 200">
               <circle class="timer-circle-bg" cx="100" cy="100" r="90" />
               <circle class="timer-circle-progress" id="timerProgressCircle" cx="100" cy="100" r="90" />
@@ -1975,10 +2034,9 @@ body.focus-mode .hero-card-preview {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 2: THE PROBLEM (CAMPUS MINT #E8F6D8)
-     Notice -> PDF -> WhatsApp -> Portal -> LMS -> Confused Student
+     SECTION 2: THE PROBLEM (SLIDE REVEAL + SEQUENCE FLOW)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-problem" id="problem" data-theme="light">
+<section class="section-problem slide-section" id="problem" data-theme="light">
   <div class="container">
     <div class="problem-header">
       <h2 class="display-title display-large problem-headline">
@@ -1991,7 +2049,6 @@ body.focus-mode .hero-card-preview {
       </p>
     </div>
 
-    <!-- Horizontal Animated Sequence -->
     <div class="confusion-sequence-wrap">
       <div class="sequence-flow" id="confusionFlow">
         <div class="flow-node">
@@ -1999,41 +2056,31 @@ body.focus-mode .hero-card-preview {
           <span class="node-label">Notice</span>
           <span class="node-subtext">Pinboard / Gate</span>
         </div>
-
         <div class="flow-arrow-sep">→</div>
-
         <div class="flow-node">
           <div class="node-icon-box">📄</div>
           <span class="node-label">PDF</span>
           <span class="node-subtext">Circular #42B</span>
         </div>
-
         <div class="flow-arrow-sep">→</div>
-
         <div class="flow-node">
           <div class="node-icon-box">💬</div>
           <span class="node-label">WhatsApp</span>
           <span class="node-subtext">Class Group</span>
         </div>
-
         <div class="flow-arrow-sep">→</div>
-
         <div class="flow-node">
           <div class="node-icon-box">🌐</div>
           <span class="node-label">Portal</span>
           <span class="node-subtext">Session Expired</span>
         </div>
-
         <div class="flow-arrow-sep">→</div>
-
         <div class="flow-node">
           <div class="node-icon-box">💻</div>
           <span class="node-label">LMS</span>
           <span class="node-subtext">Buried Folder</span>
         </div>
-
         <div class="flow-arrow-sep">→</div>
-
         <div class="flow-node student-node">
           <div class="node-icon-box">😵‍💫</div>
           <span class="node-label">Student</span>
@@ -2042,7 +2089,6 @@ body.focus-mode .hero-card-preview {
       </div>
     </div>
 
-    <!-- Collapse Interactive Card -->
     <div class="collapse-interactive-card">
       <div>
         <h3 class="display-title collapse-title">
@@ -2064,10 +2110,9 @@ body.focus-mode .hero-card-preview {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 3: ARCHITECTURE (DARK CAMPUS FOREST #12351F)
-     Don't Combine Portals. Reorganize Around Student Context.
+     SECTION 3: ARCHITECTURE (SLIDE REVEAL + PIPELINE FLOW)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-arch" id="arch" data-theme="dark">
+<section class="section-arch slide-section" id="arch" data-theme="dark">
   <div class="container">
     <div class="arch-header">
       <h2 class="display-title display-large arch-headline">
@@ -2080,9 +2125,7 @@ body.focus-mode .hero-card-preview {
       </p>
     </div>
 
-    <!-- Architectural Pipeline Flow -->
     <div class="arch-pipeline-container">
-      <!-- Step 1: Fragmented Sources -->
       <div class="arch-card">
         <span class="arch-step-num">Layer 01</span>
         <h3 class="arch-card-title">Fragmented Sources</h3>
@@ -2097,7 +2140,6 @@ body.focus-mode .hero-card-preview {
         <div class="arch-card-footer">Any format · Ingested &amp; parsed</div>
       </div>
 
-      <!-- Step 2: Context Engine (Central Hub) -->
       <div class="arch-card engine-card">
         <span class="arch-step-num" style="color:var(--lime);">Layer 02 · Core</span>
         <h3 class="arch-card-title" style="color:var(--lime);">Context Engine</h3>
@@ -2110,7 +2152,6 @@ body.focus-mode .hero-card-preview {
         <div class="arch-card-footer" style="color:var(--paper);">Real-time Personal Relevance Matrix</div>
       </div>
 
-      <!-- Step 3: Priority Surfaces -->
       <div class="arch-card">
         <span class="arch-step-num">Layer 03</span>
         <h3 class="arch-card-title">Surfaces</h3>
@@ -2123,7 +2164,6 @@ body.focus-mode .hero-card-preview {
         <div class="arch-card-footer">Zero clutter · Zero navigation traps</div>
       </div>
 
-      <!-- Step 4: One-Tap Action -->
       <div class="arch-card">
         <span class="arch-step-num">Layer 04</span>
         <h3 class="arch-card-title">One-Tap Action</h3>
@@ -2137,7 +2177,6 @@ body.focus-mode .hero-card-preview {
       </div>
     </div>
 
-    <!-- Navigation Axes Callout Bar -->
     <div class="arch-callout-strip">
       <div class="arch-callout-text">
         Navigation Axes: <span>WHEN · WHERE · WHAT TO DO</span>
@@ -2150,10 +2189,9 @@ body.focus-mode .hero-card-preview {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 4: NOW (WHITE SECTION)
-     What Matters Now? Large Editorial Action Card + Calm Urgency
+     SECTION 4: NOW (SLIDE REVEAL + ROOM ACTION CARD)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-now" id="now" data-theme="light">
+<section class="section-now slide-section" id="now" data-theme="light">
   <div class="container">
     <div class="now-header">
       <h2 class="display-title display-large now-headline">
@@ -2167,7 +2205,6 @@ body.focus-mode .hero-card-preview {
     </div>
 
     <div class="editorial-action-canvas">
-      <!-- Hero Editorial Action Card -->
       <div class="editorial-action-card">
         <div>
           <div class="action-card-top">
@@ -2195,7 +2232,6 @@ body.focus-mode .hero-card-preview {
         </div>
       </div>
 
-      <!-- Wayfinding & Walking Proximity Card -->
       <div class="wayfinder-preview-card">
         <div>
           <div class="pill-badge wayfinder-badge">
@@ -2234,7 +2270,7 @@ body.focus-mode .hero-card-preview {
   </div>
 </section>
 
-<!-- Wayfinder Modal Drawer -->
+<!-- Wayfinder Modal Drawer (Smooth Sliding Up) -->
 <div class="wayfinder-modal" id="wayfinderModal" role="dialog" aria-modal="true" aria-label="Room 312 Directions">
   <div class="modal-content-card">
     <button class="modal-close-btn" id="closeModalBtn" aria-label="Close modal">✕</button>
@@ -2254,10 +2290,9 @@ body.focus-mode .hero-card-preview {
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 5: FIND (PALE MINT #E8F6D8)
-     Ask Once. Search Campus Info Without Knowing Who Owns It.
+     SECTION 5: FIND (SLIDE REVEAL + SLIDING RESULTS)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-find" id="find" data-theme="light">
+<section class="section-find slide-section" id="find" data-theme="light">
   <div class="container">
     <div class="find-header">
       <h2 class="display-title display-large find-headline">
@@ -2269,7 +2304,6 @@ body.focus-mode .hero-card-preview {
       </p>
     </div>
 
-    <!-- Search Box System -->
     <div class="search-system-wrap">
       <div class="search-field-pill">
         <span class="search-icon-symbol">⌕</span>
@@ -2283,7 +2317,6 @@ body.focus-mode .hero-card-preview {
         <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear search">✕</button>
       </div>
 
-      <!-- Intent Chips -->
       <div class="intent-chips-row">
         <button class="intent-chip active" data-query="next class">NEXT CLASS</button>
         <button class="intent-chip" data-query="room changes">ROOM CHANGES</button>
@@ -2293,7 +2326,7 @@ body.focus-mode .hero-card-preview {
       </div>
     </div>
 
-    <!-- Dynamic Flowing Results List (NOT a card grid!) -->
+    <!-- Sliding Results Container -->
     <div class="results-flow-container" id="resultsContainer">
       <div class="result-row">
         <div class="result-time-col">3:30 PM</div>
@@ -2348,7 +2381,6 @@ body.focus-mode .hero-card-preview {
       </div>
     </div>
 
-    <!-- Expandable Context Intelligence Explanation -->
     <div class="context-explanation-box" id="contextBox">
       <button class="context-toggle-trigger" id="contextToggleBtn" aria-expanded="false">
         <span>Why am I seeing this first? (Context Engine Ranking)</span>
@@ -2377,10 +2409,9 @@ body.focus-mode .hero-card-preview {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 6: TASKS (DARK FOREST #12351F / OBSIDIAN #0B0E0C)
-     Finish The Next Thing + Interactive Completion + Lime Burst
+     SECTION 6: TASKS (SLIDE REVEAL + SLIDE-OUT COMPLETION)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-tasks" id="tasks" data-theme="dark">
+<section class="section-tasks slide-section" id="tasks" data-theme="dark">
   <div class="container">
     <div class="tasks-header">
       <h2 class="display-title display-large tasks-headline">
@@ -2393,9 +2424,7 @@ body.focus-mode .hero-card-preview {
       </p>
     </div>
 
-    <!-- Interactive Tasks Stack -->
     <div class="tasks-stack-wrap">
-      <!-- Task 1: Scholarship -->
       <div class="task-card-item" id="taskCard1">
         <div class="task-info-block">
           <div class="task-eyebrow">Academic Administration</div>
@@ -2412,7 +2441,6 @@ body.focus-mode .hero-card-preview {
         </div>
       </div>
 
-      <!-- Task 2: Room Change Acknowledgment -->
       <div class="task-card-item" id="taskCard2">
         <div class="task-info-block">
           <div class="task-eyebrow">Classroom Operations</div>
@@ -2430,7 +2458,6 @@ body.focus-mode .hero-card-preview {
       </div>
     </div>
 
-    <!-- Celebration Banner -->
     <div class="task-celebration-toast" id="taskSuccessToast">
       ✓ Task completed in 4s · Zero portals opened
     </div>
@@ -2444,10 +2471,9 @@ body.focus-mode .hero-card-preview {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 7: THE 60-SECOND JOURNEY
-     From Confusion to Action: 01 See -> 02 Understand -> 03 Act -> 04 Done
+     SECTION 7: THE 60-SECOND JOURNEY (SLIDE REVEAL)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-journey" id="journey" data-theme="light">
+<section class="section-journey slide-section" id="journey" data-theme="light">
   <div class="container">
     <div class="journey-header">
       <h2 class="display-title display-large journey-headline">
@@ -2461,7 +2487,6 @@ body.focus-mode .hero-card-preview {
     </div>
 
     <div class="journey-grid">
-      <!-- Stage 01 -->
       <div class="journey-card">
         <div class="journey-num">01</div>
         <div>
@@ -2472,7 +2497,6 @@ body.focus-mode .hero-card-preview {
         </div>
       </div>
 
-      <!-- Stage 02 -->
       <div class="journey-card">
         <div class="journey-num">02</div>
         <div>
@@ -2483,7 +2507,6 @@ body.focus-mode .hero-card-preview {
         </div>
       </div>
 
-      <!-- Stage 03 -->
       <div class="journey-card">
         <div class="journey-num">03</div>
         <div>
@@ -2494,7 +2517,6 @@ body.focus-mode .hero-card-preview {
         </div>
       </div>
 
-      <!-- Stage 04 -->
       <div class="journey-card" style="background:var(--forest);color:var(--paper);">
         <div class="journey-num" style="color:var(--lime);">04</div>
         <div>
@@ -2509,9 +2531,9 @@ body.focus-mode .hero-card-preview {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     SECTION 8: DESIGN PRINCIPLES (SPACIOUS 3-COLUMN)
+     SECTION 8: DESIGN PRINCIPLES (SLIDE REVEAL)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-principles" id="principles" data-theme="light">
+<section class="section-principles slide-section" id="principles" data-theme="light">
   <div class="container">
     <div class="principles-header">
       <h2 class="display-title display-large principles-headline">
@@ -2521,7 +2543,6 @@ body.focus-mode .hero-card-preview {
     </div>
 
     <div class="principles-grid">
-      <!-- 01 -->
       <div class="principle-card">
         <span class="principle-num">01</span>
         <h3 class="principle-title">ONE SURFACE</h3>
@@ -2530,7 +2551,6 @@ body.focus-mode .hero-card-preview {
         </p>
       </div>
 
-      <!-- 02 -->
       <div class="principle-card">
         <span class="principle-num">02</span>
         <h3 class="principle-title">ONE NEXT ACTION</h3>
@@ -2539,7 +2559,6 @@ body.focus-mode .hero-card-preview {
         </p>
       </div>
 
-      <!-- 03 -->
       <div class="principle-card">
         <span class="principle-num">03</span>
         <h3 class="principle-title">ONE GLANCE</h3>
@@ -2552,9 +2571,9 @@ body.focus-mode .hero-card-preview {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     FINAL DRAMATIC DARK CTA & FOOTER
+     FINAL DRAMATIC DARK CTA & FOOTER (SLIDE REVEAL)
 ══════════════════════════════════════════════════════════════ -->
-<section class="section-final-cta" id="cta" data-theme="dark">
+<section class="section-final-cta slide-section" id="cta" data-theme="dark">
   <div class="container">
     <h2 class="display-title display-large final-cta-headline">
       60 SECONDS<br>
@@ -2571,7 +2590,6 @@ body.focus-mode .hero-card-preview {
       </button>
     </div>
 
-    <!-- Competition Footer -->
     <footer class="site-footer">
       <div>
         CAMPUS PULSE · SIGNALS, NOT SOURCES
@@ -2598,7 +2616,27 @@ body.focus-mode .hero-card-preview {
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ──────────────────────────────────────────────────────────
-     1. SMART HEADER COLOR INVERSION ON SCROLL
+     1. SCROLL-TRIGGERED SECTION SLIDE ANIMATIONS
+  ────────────────────────────────────────────────────────── */
+  const slideSections = document.querySelectorAll('.slide-section');
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  slideSections.forEach(section => {
+    sectionObserver.observe(section);
+  });
+
+  /* ──────────────────────────────────────────────────────────
+     2. SMART HEADER COLOR INVERSION ON SCROLL
   ────────────────────────────────────────────────────────── */
   const header = document.getElementById('siteHeader');
   const darkSections = document.querySelectorAll('[data-theme="dark"]');
@@ -2626,9 +2664,24 @@ document.addEventListener('DOMContentLoaded', () => {
   checkHeaderTheme();
 
   /* ──────────────────────────────────────────────────────────
-     2. NAVIGATION PILL ACTIVE STATE TRACKER
+     3. SLIDING PILL NAVIGATION INDICATOR
   ────────────────────────────────────────────────────────── */
+  const navPillGroup = document.getElementById('navPillGroup');
+  const navPillIndicator = document.getElementById('navPillIndicator');
   const navLinks = document.querySelectorAll('.nav-link');
+
+  function updatePillPosition(activeLink) {
+    if (!activeLink || !navPillIndicator || !navPillGroup) return;
+    const groupRect = navPillGroup.getBoundingClientRect();
+    const linkRect = activeLink.getBoundingClientRect();
+
+    const left = linkRect.left - groupRect.left;
+    const width = linkRect.width;
+
+    navPillIndicator.style.transform = `translateX(${left - 4}px)`;
+    navPillIndicator.style.width = `${width}px`;
+  }
+
   const sectionsToTrack = [
     { id: 'now', link: document.querySelector('.nav-link[data-nav="now"]') },
     { id: 'find', link: document.querySelector('.nav-link[data-nav="find"]') },
@@ -2636,7 +2689,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   function updateActiveNav() {
-    const scrollY = window.scrollY + 200;
+    const scrollY = window.scrollY + 220;
     sectionsToTrack.forEach(item => {
       const sec = document.getElementById(item.id);
       if (sec) {
@@ -2644,16 +2697,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const height = sec.offsetHeight;
         if (scrollY >= top && scrollY < top + height) {
           navLinks.forEach(l => l.classList.remove('active'));
-          if (item.link) item.link.classList.add('active');
+          if (item.link) {
+            item.link.classList.add('active');
+            updatePillPosition(item.link);
+          }
         }
       }
     });
   }
 
+  // Initial pill position
+  const initialActive = document.querySelector('.nav-link.active');
+  if (initialActive) {
+    setTimeout(() => updatePillPosition(initialActive), 100);
+  }
+
   window.addEventListener('scroll', updateActiveNav, { passive: true });
+  window.addEventListener('resize', () => {
+    const active = document.querySelector('.nav-link.active');
+    if (active) updatePillPosition(active);
+  });
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      updatePillPosition(link);
+    });
+  });
 
   /* ──────────────────────────────────────────────────────────
-     3. INTERACTIVE 60-SECOND TIMER & FOCUS MODE
+     4. INTERACTIVE 60-SECOND TIMER & FOCUS MODE
   ────────────────────────────────────────────────────────── */
   let timerDuration = 60;
   let timerCurrent = 60;
@@ -2759,19 +2833,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ──────────────────────────────────────────────────────────
-     4. THE PROBLEM SECTION: COLLAPSE INTERACTION
+     5. THE PROBLEM SECTION: COLLAPSE INTERACTION
   ────────────────────────────────────────────────────────── */
   const simulateCollapseBtn = document.getElementById('simulateCollapseBtn');
   const confusionFlow = document.getElementById('confusionFlow');
 
   simulateCollapseBtn.addEventListener('click', () => {
-    confusionFlow.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
-    confusionFlow.style.transform = 'scale(0.96)';
-    confusionFlow.style.opacity = '0.5';
+    confusionFlow.style.transition = 'all 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
+    confusionFlow.style.transform = 'scale(0.94)';
+    confusionFlow.style.opacity = '0.4';
 
     setTimeout(() => {
       confusionFlow.innerHTML = `
-        <div style="width:100%;text-align:center;padding:24px;background:var(--forest);color:var(--lime);border-radius:18px;">
+        <div style="width:100%;text-align:center;padding:24px;background:var(--forest);color:var(--lime);border-radius:18px;animation:slideUpModal 0.4s var(--ease-spring);">
           <h4 style="font-size:22px;font-weight:900;text-transform:uppercase;margin-bottom:6px;">
             ✓ 6 Channels Synthesized Into 1 Action Signal
           </h4>
@@ -2782,11 +2856,11 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       confusionFlow.style.transform = 'scale(1)';
       confusionFlow.style.opacity = '1';
-    }, 400);
+    }, 380);
   });
 
   /* ──────────────────────────────────────────────────────────
-     5. NOW SECTION: ROOM MODAL & SEEN ACTION
+     6. NOW SECTION: ROOM MODAL & SEEN ACTION
   ────────────────────────────────────────────────────────── */
   const openWayfinderBtn = document.getElementById('openWayfinderBtn');
   const openFloorplanBtn = document.getElementById('openFloorplanBtn');
@@ -2823,7 +2897,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ──────────────────────────────────────────────────────────
-     6. FIND SECTION: LIVE SEARCH & INTENT CHIPS
+     7. FIND SECTION: LIVE SEARCH & SLIDING INTENT RESULTS
   ────────────────────────────────────────────────────────── */
   const searchInput = document.getElementById('campusSearchInput');
   const clearBtn = document.getElementById('searchClearBtn');
@@ -2889,6 +2963,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    // Trigger sliding animation
+    resultsContainer.classList.remove('slide-transition');
+    void resultsContainer.offsetWidth; // Trigger reflow
+    resultsContainer.classList.add('slide-transition');
+
     if (matches.length === 0) {
       resultsContainer.innerHTML = `
         <div style="text-align:center;padding:36px;color:var(--pebble);">
@@ -2940,7 +3019,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* Context Explanation Drawer Toggle */
+  // Context Explanation Drawer Toggle
   const contextToggleBtn = document.getElementById('contextToggleBtn');
   const contextBox = document.getElementById('contextBox');
 
@@ -2950,7 +3029,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ──────────────────────────────────────────────────────────
-     7. TASKS SECTION: COMPLETE WITH DRAWING ANIMATION & BURST
+     8. TASKS SECTION: SLIDE-OUT COMPLETION ANIMATION
   ────────────────────────────────────────────────────────── */
   const taskButtons = document.querySelectorAll('.task-btn-complete');
   const celebrationToast = document.getElementById('taskSuccessToast');
